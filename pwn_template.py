@@ -3,7 +3,9 @@
 Template for pwntools exploits
 
 io.clean()
-fit/flat creates nested data structs. fills intermediate data with cyclic patterns. takes dict of {offset: value} pairs
+fit/flat creates flattend binary payload of nested data structs. fills intermediate data with cyclic patterns (and up to length).
+takes dict of {offset: value} pairs. Can be nested
+Calls pack() on addresses/ints passed.
 
 Flags:
 
