@@ -1,0 +1,1 @@
+TODO: get configs for tmux, bashrc, rest of student machine ~/configs
