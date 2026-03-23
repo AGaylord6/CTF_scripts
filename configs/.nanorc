@@ -1,0 +1,13 @@
+set linenumbers
+set autoindent
+set tempfile
+set smooth
+set nonewlines
+set mouse
+set casesensitive
+
+include "/usr/share/nano/*.nanorc"
+
+bind ^z undo main
+bind ^F whereis all     # CTRL+F - Find
+bind ^S savefile main   # CTRL+S - Save
