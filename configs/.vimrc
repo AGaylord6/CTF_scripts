@@ -23,12 +23,13 @@ set lazyredraw              " Don't redraw screen during macros (faster performa
 set ttyfast                 " Smooth out terminal redrawing
 set laststatus=2            " Always display the status line
 set mouse=a                 " Enable mouse support in all modes (scrolling, clicking)
-set visualbell
+" set visualbell
+set belloff=all
 set wrap
 set scrolloff=3
 set backspace=indent,eol,start
-nnoremap <expr> j (v:count == 0 ? 'gk' : 'k')
-nnoremap <expr> k (v:count == 0 ? 'gj' : 'j')
+" nnoremap <expr> j (v:count == 0 ? 'gk' : 'k')
+" nnoremap <expr> k (v:count == 0 ? 'gj' : 'j')
 
 " ====================================================================
 " SEARCH OPTIONS
