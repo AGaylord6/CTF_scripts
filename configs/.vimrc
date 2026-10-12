@@ -7,6 +7,7 @@ set nocompatible            " Disable compatibility with old vi
 set encoding=utf-8          " Set internal character encoding to UTF-8
 set fileencoding=utf-8      " Set default file write encoding
 set hidden                  " Allow background buffers to remain open without saving
+set clipboard=unnamed
 
 " ====================================================================
 " USER INTERFACE
@@ -76,6 +77,9 @@ nnoremap <C-l> <C-w>l
 
 " Remap jk to Escape when in Insert Mode (saves finger stretching)
 inoremap jk <Esc>
+
+nmap H ^
+nmap L $
 
 " PLUGINS
 filetype plugin indent on
